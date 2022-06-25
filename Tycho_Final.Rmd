@@ -1,0 +1,204 @@
+---
+title: "Tycho"
+author: "Tushal_Kakadiya"
+date: '2022-06-21'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+library (ggplot2)
+library (ggthemes)
+library (readr)
+library (dplyr)
+library (tidyverse)
+library (ggpubr)
+library (treemap)
+library (usmap)
+library (gapminder)
+library (gganimate)
+library (treemap)
+library (ggridges)
+```
+
+
+```{r}
+setwd("D:/LSI/Life Science Info. SS 2022/Data Visulization") # Setting working directory
+Tycho <- read.csv("ProjectTycho_Level2_v1.1.0.csv", header = T, stringsAsFactors = T) # Loading data in csv File
+
+```
+
+```{r}
+dim(Tycho) # Dimension of the data in rows followed by columns
+```
+
+```{r}
+Tycho <- Tycho %>% arrange(epi_week) #Arranging data by time sires from 1888 to 2014
+head(Tycho)
+```
+
+```{r}
+Tycho <- Tycho[ , -11] # Deletion of column num. 11 url
+Tycho <- Tycho[ , -2] # Deletion of column num. 2 US
+```
+
+```{r}
+Tycho <- Tycho %>% filter(number > 0 ) # removing 0 cases or deaths from the Tycho 36,59,360 - 26,78,605 = 9,80,755 rows has 0 cases data. 
+```
+
+```{r}
+str(Tycho)# checking the data type of each column 
+```
+
+```{r}
+Tycho$to_date <- as.Date(Tycho$to_date, format = "%Y-%m-%d") # change the format from factor to date
+Tycho$from_date <- as.Date(Tycho$from_date, format = "%Y-%m-%d")
+```
+
+
+```{r}
+levels(Tycho$disease) # List of all 50 disease
+```
+
+```{r}
+unique(Tycho$state) # Here we have 57 observation in state but currently USA have 50 states only
+```
+
+```{r}
+Disease <- Tycho %>% count(disease,event, wt = number) # sum of all disease according cases and deaths
+```
+Hmmm, Here is the another problem, in some disease we don't have records for cases there are just deaths "CHOLERA" and in reverse there is 0 death against huge cases 4928414 of "CHLAMYDIA". chlamydia death USA 
+https://www.getargon.io/posts/health/conditions/us-std/death-rate-chlamydia-us/
+
+```{r}
+# Tree map to visualize disease ratio according total event per cases and deaths 
+treemap(Disease, index = c("disease","event"),
+        vSize = "n", vColor = "event", type = "index", bg.labels = 0,
+        title = "  Treemap for all 50 Disease", border.col = c("black", "white"),
+        border.lwds = c(0,0), palette = ("Paired"),
+        align.labels = list(c("center","center"),c("right","bottom"))) 
+```
+
+
+Filtering cases and deaths on basis of States, Note some times in loc_type we have city name but its not in the most of cases so here consideration is all data as state data.
+
+
+```{r}
+State <- Tycho %>% count(state,event, wt = number) # sum for all cases and deaths in each state
+State <- State %>% pivot_wider(
+  names_from = event, 
+  values_from = n,
+  values_fill = 0,
+  values_fn = list(breaks = mean)) # converting rows to column 
+```
+
+Now lets understand the total cases for all time period on 50 states and with all diseases.
+
+```{r}
+plot_usmap(data = State,values = "CASES",labels = TRUE) + 
+  scale_fill_gradient(low = 'Gray95',high = "forestgreen" ) + # color of graph
+  ggtitle("Total Cases In States, Years 1888 - 2014") +
+  theme(plot.title = element_text(size = 15, hjust = 0.5))  # title arrangements
+ # Attention:- Scale we need to adjust
+```
+
+```{r}
+
+plot_usmap(data = State, values = "DEATHS",labels = TRUE) + 
+  scale_fill_gradient(low = 'Gray95',high = "darkslateblue" ) +  # color of graph
+  ggtitle("Total Deaths In States, Years 1888 - 2014") +
+  theme(plot.title = element_text(size = 15, hjust = 0.5)) 
+```
+
+
+```{r}
+Disease1 <- Disease %>% pivot_wider(
+  names_from = event, 
+  values_from = n,
+  values_fill = 0) # creates Disease1 which has separate deaths and cases column 
+Disease1 <- Disease1 %>% group_by(DEATHS,CASES) %>% filter(CASES  >= 55000 | DEATHS > 60000) # filtering cases and death
+Disease1 <- Disease1 %>% pivot_longer( cols = DEATHS : CASES, names_to = "event", values_to = "number") # Changing back as before 
+```
+
+
+```{r}
+ggplot(Disease1, aes(x = reorder(disease, number) , y = reorder(number, disease),  fill= event))+
+  geom_bar( position='dodge', stat='identity') + coord_flip()+ theme_igray() +
+  scale_fill_manual(values = c("slategray3", "slategray4"),labels = c("CASES","DEATHS")) +  
+  theme(text = element_text(size = 7),element_line(size =1),legend.position = c(0.9, 0.2),axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Cases greater then 55,000") 
+```
+
+
+```{r}
+Disease2 <- Disease %>% pivot_wider(
+  names_from = event, 
+  values_from = n,
+  values_fill = 0) # creates Disease1 which has separate deaths and cases column 
+Disease2 <- Disease2 %>% group_by(DEATHS,CASES) %>% filter(CASES <= 50000 & disease != "PNEUMONIA AND INFLUENZA") # filtering cases and death and skip "PNEUMONIA AND INFLUENZA" from the selection because took already in Disease1.
+
+Disease2 <- Disease2 %>% pivot_longer( cols = DEATHS : CASES, names_to = "event", values_to = "number")
+
+```
+
+```{r}
+ggplot(Disease2, aes(x = reorder(disease, number) , y = reorder(number, disease),  fill= event))+
+  geom_bar( position='dodge', stat='identity') + coord_flip()+ theme_igray() +
+  scale_fill_manual(values = c("lemonchiffon3", "lemonchiffon4"),labels = c("CASES","DEATHS")) +  
+  theme(text = element_text(size = 7),element_line(size =1),legend.position = c(0.9, 0.2),axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("Cases lower then 55,000") 
+```
+
+```{r}
+Case_n_Death <- Disease %>% pivot_wider(names_from = event, values_from = n, values_fill = 0) 
+Case_n_Death <- Case_n_Death %>% group_by(CASES,DEATHS) %>% filter(CASES  >= 1 & DEATHS >= 1 )
+Case_n_Death <- Case_n_Death %>%  pivot_longer( cols = DEATHS : CASES, names_to = "event", values_to = "number")
+
+```
+
+```{r}
+ggplot(Case_n_Death, aes(x=number, y=disease, fill=disease)) + theme_light() +
+  geom_boxplot() + xscale("log2", .format = FALSE) + theme(legend.position = "none") + theme(text = element_text(size = 7),element_line(size =1)) + ggtitle("Deaths and Cases distribution")
+```
+We have 15 disease from data which have deaths and cases records, so if we look among those disease in box plot then it shows Tuberculosis, Pneumonia, pellagra and meningitis has high mortality afmong all other disease. 
+
+```{r}
+State_death_count <- filter (Tycho, event == "DEATHS") # filtering only deaths using state column (2)number from Tycho
+State_death_count <- State_death_count %>%  group_by(state, disease) %>% summarise(number = sum(number))
+```
+
+
+```{r}
+ggplot(State_death_count, aes(state,disease)) +
+  geom_tile(aes(fill= number), colour = "black") + # Border color
+  scale_fill_continuous(high= "darkblue",low = "grey77") + # Box color low to high
+  theme_pubclean() + # plot theme
+  theme(text = element_text(size = 9),axis.text.x = element_text(angle = 90, hjust = 1)) + # text size arrangement of scales
+ theme(legend.key.width = unit(0.8, "cm"), legend.key.height = unit(0.2, "cm"),legend.direction = 'horizontal', legend.position = c(0.75, 1.05)) +
+  ggtitle("Heatmap of Deaths of Disease in State" )
+```
+
+```{r}
+State_cases_count <- filter (Tycho, event == "CASES") # filtering only cases using state column (2) number from Tycho
+State_cases_count <- State_death_count %>%  group_by(state, disease) %>% summarise(number = sum(number))
+```
+
+
+
+```{r}
+ggplot(State_cases_count, aes(state, disease )) +
+  geom_tile(aes(fill= number ), colour = "black") +
+  scale_fill_gradient(low = "grey87", high = "orangered4" ) +
+  theme_pubclean() + # plot theme
+  theme(text = element_text(size = 7),axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(legend.key.width = unit(0.9, "cm"), legend.key.height = unit(0.1, "cm"),legend.direction = 'horizontal', legend.position = c(0.78, 1.04)) +
+  ggtitle("Heatmap of Cases of Disease in State" ) # plot title
+  
+# White space shows there are no cases for particular disease in related states
+```
+

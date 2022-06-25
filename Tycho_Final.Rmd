@@ -80,7 +80,7 @@ https://www.getargon.io/posts/health/conditions/us-std/death-rate-chlamydia-us/
 treemap(Disease, index = c("disease","event"),
         vSize = "n", vColor = "event", type = "index", bg.labels = 0,
         title = "  Treemap for all 50 Disease", border.col = c("black", "white"),
-        border.lwds = c(0,0), palette = ("Paired"),
+        border.lwds = c(0,0), palette = ("Set3"),
         align.labels = list(c("center","center"),c("right","bottom"))) 
 ```
 
@@ -104,14 +104,14 @@ plot_usmap(data = State,values = "CASES",labels = TRUE) +
   scale_fill_gradient(low = 'Gray95',high = "forestgreen" ) + # color of graph
   ggtitle("Total Cases In States, Years 1888 - 2014") +
   theme(plot.title = element_text(size = 15, hjust = 0.5))  # title arrangements
- # Attention:- Scale we need to adjust
+
 ```
 
 ```{r}
 
 plot_usmap(data = State, values = "DEATHS",labels = TRUE) + 
   scale_fill_gradient(low = 'Gray95',high = "darkslateblue" ) +  # color of graph
-  ggtitle("Total Deaths In States, Years 1888 - 2014") +
+  ggtitle("Total Deaths In States, Years 1888 - 2014") + # title arrangements
   theme(plot.title = element_text(size = 15, hjust = 0.5)) 
 ```
 
@@ -123,14 +123,15 @@ Disease1 <- Disease %>% pivot_wider(
   values_fill = 0) # creates Disease1 which has separate deaths and cases column 
 Disease1 <- Disease1 %>% group_by(DEATHS,CASES) %>% filter(CASES  >= 55000 | DEATHS > 60000) # filtering cases and death
 Disease1 <- Disease1 %>% pivot_longer( cols = DEATHS : CASES, names_to = "event", values_to = "number") # Changing back as before 
+
 ```
 
 
 ```{r}
 ggplot(Disease1, aes(x = reorder(disease, number) , y = reorder(number, disease),  fill= event))+
-  geom_bar( position='dodge', stat='identity') + coord_flip()+ theme_igray() +
-  scale_fill_manual(values = c("slategray3", "slategray4"),labels = c("CASES","DEATHS")) +  
-  theme(text = element_text(size = 7),element_line(size =1),legend.position = c(0.9, 0.2),axis.text.x = element_text(angle = 90, hjust = 1)) +
+  geom_bar( position='dodge', stat='identity', ) + coord_flip()+ theme_igray() +
+  scale_fill_manual( values = c("slategray3", "slategray4"),labels = c("CASES","DEATHS")) +  
+  theme(text = element_text(size = 6),element_line(size =1),legend.position = c(0.9, 0.2),axis.text.x = element_text(angle = 90, hjust = 1)) +
   ggtitle("Cases greater then 55,000") 
 ```
 
@@ -176,11 +177,11 @@ State_death_count <- State_death_count %>%  group_by(state, disease) %>% summari
 ```{r}
 ggplot(State_death_count, aes(state,disease)) +
   geom_tile(aes(fill= number), colour = "black") + # Border color
-  scale_fill_continuous(high= "darkblue",low = "grey77") + # Box color low to high
+  scale_fill_continuous(high= "darkblue",low = "grey87") + # Box color low to high
   theme_pubclean() + # plot theme
   theme(text = element_text(size = 9),axis.text.x = element_text(angle = 90, hjust = 1)) + # text size arrangement of scales
  theme(legend.key.width = unit(0.8, "cm"), legend.key.height = unit(0.2, "cm"),legend.direction = 'horizontal', legend.position = c(0.75, 1.05)) +
-  ggtitle("Heatmap of Deaths of Disease in State" )
+  ggtitle("Heatmap of Deaths in State" )
 ```
 
 ```{r}
@@ -197,7 +198,7 @@ ggplot(State_cases_count, aes(state, disease )) +
   theme_pubclean() + # plot theme
   theme(text = element_text(size = 7),axis.text.x = element_text(angle = 90, hjust = 1)) +
   theme(legend.key.width = unit(0.9, "cm"), legend.key.height = unit(0.1, "cm"),legend.direction = 'horizontal', legend.position = c(0.78, 1.04)) +
-  ggtitle("Heatmap of Cases of Disease in State" ) # plot title
+  ggtitle("Heatmap of Cases of in State" ) # plot title
   
 # White space shows there are no cases for particular disease in related states
 ```

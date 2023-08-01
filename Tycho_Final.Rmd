@@ -1,0 +1,449 @@
+---
+title: " Data Visualization Part-1 Tycho2.0 "
+author: "Kakadiya Tushal [Tushal.Kakadiya@stud.th-deg.de]"
+date: "20-06-2022"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+html_document:
+  title: Table of content
+  toc: yes
+  toc_depth: 2
+  df_print: paged
+---
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("K:/AI & DS/Data Visualisation/Tycho2/Logo.png"), 
+             alt = 'Logo', 
+             style = 'position:absolute; top:0; right:0; padding:60px; width: 550px; height: 200px')
+```
+---
+
+\newpage
+
+# 1.Introduction
+
+When it comes to interpreting the world and the enormous amount of data is producing on a daily basis, Data Visualization becomes the most desirable way. Rather than screening huge Excel sheets, it is always better to visualize that data through charts and graphs, to gain meaningful insights. 
+
+
+# 2.Objectives
+
+We are trying to study the nature of spread of different types of diseases in the all states of United States.
+For that we will be using the data provided by the so and so.(Link of the data that can be downloaded). From this data we have produced graphs for the number of cases and number of deaths that have caused due to all diseases in all the states of the US. From that we have extracted the data of the most dreadful disease that have caused maximum deaths and its activity during the years and from the plot it is easy to understand during which years the disease had its prime spread in the society. From that we can get which State has got higher damage due to the effect of this particular disease.
+
+# 3.Methods
+
+R provides quick and simple tools that make it easier to transform data into visually insightful pieces like graphs. The data gets easier to read and comprehend from the graphs. The following is a list of the various types of graphs are plotted here using Descriptive statistics and ggplot2.
+
+Tree Map: A Tree map displays hierarchical data as a set of nested rectangles. Each group is represented by a rectangle, which area is proportional to its value.
+
+Geom Map: Used to display the data in the Map (In this case the U.S map)
+
+Bar plot: A bar chart presents categorical data with rectangular bars with heights or lengths proportional to the values that they represent.
+
+Box plot: A box plot shows the distribution of numerical data and skewness through displaying data averages.
+ 
+Heat Map: A heat map is a two-dimensional representation of data in which values are represented by color gradients.
+
+Animation Plot: A animation plot makes easy to represent data distribution over time period.
+
+
+# 4.Data Analysis
+
+The data analyses are done in different steps which are explained in detail as follows.
+
+## 4.1 Loading the libraries
+
+Here we can find all the libraries we have used in this work.
+
+
+```{r}
+library (ggplot2)
+library (ggthemes)
+library (readr)
+library (tmap, mapview)
+library (plotly)
+library (viridis)
+library (dplyr)
+library (tidyverse)
+library (ggpubr)
+library (treemap)
+library (usmap)
+library (gapminder)
+library (gganimate)
+library (treemap)
+library (ggridges)
+library (png)
+library (gifski)
+options(scipen=999999) # It disables the scientific notion 
+```
+```{r}
+options(scipen=9999)
+```
+
+
+```{r}
+Tycho <- read.csv("K:/LSI/Life Science Info. SS 2022/Data Visulization/ProjectTycho_Level2_v1.1.0.csv", header = T, stringsAsFactors = T) # read.csv function loads a data in work space.
+
+```
+
+```{r}
+dim(Tycho) # Dimension of the data in rows followed by columns
+```
+
+```{r}
+Tycho <- Tycho %>% arrange(epi_week) #Arranging data by time sires from 1888 to 2014
+head(Tycho)
+```
+
+```{r}
+Tycho <- Tycho[ , -11] # Deletion of column num. 11 url
+Tycho <- Tycho[ , -2] # Deletion of column num. 2 US
+```
+
+```{r}
+Tycho <- Tycho %>% filter(number > 0 ) # removing 0 cases or deaths from the Tycho 36,59,360 - 26,78,605 = 9,80,755 rows has 0 cases data. 
+```
+
+```{r}
+str(Tycho)# checking the data type of each column 
+```
+
+```{r}
+Tycho$to_date <- as.Date(Tycho$to_date, format = "%Y-%m-%d") # change the format from factor to date
+Tycho$from_date <- as.Date(Tycho$from_date, format = "%Y-%m-%d")
+```
+
+
+```{r}
+levels(Tycho$disease) # List of all 50 disease
+```
+
+```{r}
+unique(Tycho$state) # Here we have 57 observation in state but currently USA have 50 states only
+```
+
+```{r}
+Disease <- Tycho %>% count(disease,event, wt = number) # sum of all disease according cases and deaths
+```
+
+## Tree map
+
+```{r}
+# Tree map to visualize disease ratio according total event per cases and deaths 
+treemap(Disease, index = c("disease","event"),
+        vSize = "n", vColor = "event", type = "index", bg.labels = 0,
+        title = "  Treemap for all 50 Disease", border.col = c("black", "white"),
+        border.lwds = c(0,0), palette = ("Set3"),
+        align.labels = list(c("center","center"),c("right","bottom"))) 
+```
+
+Here, the Treemap shows how the spread of disease varies in terms of magnitude in relation to one another. The most prevalent diseases are shown in the largest quadrilateral region, whilst the least prevalent diseases are shown in the smallest quadrilateral. Additionally, it provides an explanation for two events—cases and deaths—in terms of the occurrence ratio.
+
+Here is one problem from data, for some disease don’t have records for cases, Only deaths are there for example “CHOLERA” and in reverse there is 0 death against huge cases of 4928414 for “CHLAMYDIA”. Just for notice deaths of chlamydia in USA could be checked here [2] (https://www.getargon.io/posts/health/conditions/us-std/death-rate-chlamydia-us/)
+
+
+```{r}
+Events <- Tycho %>% filter(number >= 1) # Separating values which shows at least one case or death.
+Events$epi_week <- substr(Events$epi_week,1,4)
+colnames(Events)[1] <- 'year' # Removing epi_week and making year column instead of year+ week.
+Events$year <- as.numeric(Events$year)
+```
+
+
+```{r}
+Event_Case <- subset(Events, event == "CASES", select = c(year, state, disease, number))# Separating Cases from events column 
+Event_Death <- subset(Events, event == "DEATHS", select = c(year, state, disease, number ))# # Separating Deaths from events column
+
+# Preparing Data for cases
+year_state_Case <- Event_Case %>% select(year, state, number)
+year_state_Case <- aggregate(year_state_Case, number ~ year + state, sum)
+
+# Preparing Data for deaths
+year_state_Death <- Event_Death %>% select(year, state, number)
+year_state_Death <- aggregate(year_state_Death, number ~ year + state, sum)
+
+
+```
+
+## Scatter Plot-1 for Cases
+
+Over the duration of the observation period, the scatter plot compares the cases.This graph uses a log10 scale to compare all Diseas cases across all 50 states. Between 1930 to 1960, there was an excess of cases in every state as per result. There is Data missing for 4 year from 2002 to 2005. The cases increase again after that, this time around year 2010.
+
+```{r}
+ggplot(data = year_state_Case) +
+  geom_jitter(aes(x =year, y = number, color = state), alpha=.4, size = 1) + 
+  labs(title ='Comparing Cases according states by year', subtitle = 'log10 on Y axis' , y = 'Number of Cases') +
+  scale_y_log10() +
+  theme_minimal() +
+  theme(legend.position = c(0))
+```
+
+## Scatter Plot-2 for Deaths
+
+This graph compares the Deaths throughout the course of the observation period using a scatter plot. This graph compares all deaths events among all 50 states using a log10 scale.As a result, the Record does not contain any death information from 1948 until around 1965. So we may claim that the data record provided is not entirely accurate.
+
+```{r}
+ggplot(data = year_state_Death) +
+  geom_jitter(aes(x =year, y = number, color = state), alpha=.4, size = 1) + 
+  labs(title ='Comparing Death according states by year', 
+       subtitle = 'log10 on Y axis' , y = 'Number of Deaths') +
+  scale_y_log10() + 
+  theme_minimal() +
+  theme(legend.position = c(0))
+```
+
+
+## US map 1 Cases
+
+This first graphical plot, an interactive choropleth map, displays all cases for all 50 States in the United States from 1888 to 2014 year wise. It explains why particular locations or sets of states, like New York, have lighter hues more frequently in the US’s northwest. West coast states like Texas and California give the south a menacing vibe. States from the US’s core geographic position, on the other hand, have dark hues, signifying fewer incidences between 1888 and 2014.
+
+```{r fig.align='center'}
+
+# Plotting a Graph according filtered Data
+plot_geo(year_state_Case, locationmode = 'USA-states', frame = ~ year) %>% 
+  add_trace(locations = ~ state, z = ~number, zmin = 0, zmax = max(year_state_Case$number), color = ~number, colorscale = 'PuBu') %>%
+  layout(geo = list(scope = 'usa'), title = "State wise Cases event from all disease by each year ")
+
+```
+
+
+## US map 2 Deaths
+
+Only cases are shown in the plot at the top. It is advised that mortality rates for all diseases combined be compared for each state in the US in order to ascertain if the data is distributed throughout all states or not. Comparing cases and deaths for each state upholds the idea that a spike in cases would lead to a rise in fatalities, however certain states (WI, WA) don’t do this, leading us to assume that the prevalence of high fatality illnesses is uneven. Below plot just represents apposite events means deaths on each state of US.
+
+```{r fig.align='center'}
+# Plotting a Graph according filtered Data 
+plot_geo(year_state_Death, locationmode = 'USA-states', frame = ~ year) %>% 
+add_trace(locations = ~ state, z = ~number, zmin = 0, zmax = max(year_state_Death$number), color = ~number, colorscale = 'Electric') %>%
+layout(geo = list(scope = 'usa'), title = "State wise Death event from all disease by each year ")
+```
+
+
+```{r}
+# filtering disease which is grater than 50,000.
+Disease1 <- Disease %>% pivot_wider(names_from = event, values_from = n, values_fill = 0) # creates Disease1 which has separate deaths and cases column 
+Disease1 <- Disease1 %>% group_by(DEATHS,CASES) %>% filter(CASES  >= 55000 | DEATHS > 60000) # filtering cases and death
+Disease1 <- Disease1 %>% pivot_longer( cols = DEATHS : CASES, names_to = "event", values_to = "number") # Changing back as before 
+
+```
+
+
+## Grouped Bar plot 1
+
+The diseases with up to 50,000 documented cases are represented in this bar graph, along with the cases and deaths connected to each ailment. 25 diseases with up to 50,000 cases were found in the studies.Due to the fact that many diseases have fewer recorded cases than reported fatalities, the data is not entirely accurate.The shocking part is that there have been roughly 40,000 documented deaths from influenza and pneumonia combined when there were 0 reported cases.
+
+```{r warning=FALSE, fig.align='center'} 
+## Bar plot for comparing each disease with cases and deaths which are grater than 55,000
+ggplot(Disease1, aes(x = reorder(disease, number) , y = reorder(number, disease),  fill= event))+
+  geom_bar( position='dodge', stat='identity', ) + coord_flip()+ 
+  scale_fill_manual( values = c("slategray3", "slategray4"),labels = c("CASES","DEATHS")) + 
+  labs(title ="More than 50,000 cases and deaths reported per Disease", x = 'Disease' , y = 'Numbers') + # Title of the plot
+  theme(text = element_text(size = 9),element_line(size =1),legend.position = c(-0.3, 0.0),axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+
+```{r}
+# filtering disease which is lower than 50,000.
+Disease2 <- Disease %>% pivot_wider(
+  names_from = event, 
+  values_from = n,
+  values_fill = 0) # creates Disease1 which has separate deaths and cases column 
+Disease2 <- Disease2 %>% group_by(DEATHS,CASES) %>% filter(CASES <= 50000 & disease != "PNEUMONIA AND INFLUENZA") # filtering cases and death and skip "PNEUMONIA AND INFLUENZA" from the selection because took already in Disease1.
+
+Disease2 <- Disease2 %>% pivot_longer( cols = DEATHS : CASES, names_to = "event", values_to = "number")
+
+```
+
+
+## Grouped Bar plot 2
+
+This Grouped bar graph shows the diseases with more than 50,000 reported instances, In comparison of cases and deaths associated with each disease. In the findings, 24 illnesses with more than 50,000 cases were identified. Moreover, the records show that there were 277655 reported cases from the measles which is highest. Additionally, according to the provided data, there are around 70,000 cases of pneumonia and 73,000 deaths from the disease.Therefore, it is clear that more deaths from pneumonia than cases have been reported. Therefore, this information might not be totally accurate for some disease.
+
+
+```{r warning=FALSE, fig.align='center'} 
+# Bar plot for comparing each disease with cases and deaths which are lower than 50,000
+ggplot(Disease2, aes(x = reorder(disease, number) , y = reorder(number, disease), fill= event))+
+  geom_bar( position='dodge', stat='identity') + coord_flip()+ 
+  scale_fill_manual(values = c("lemonchiffon3", "lemonchiffon4"),labels = c("CASES","DEATHS")) +  
+  labs(title ="Lower than 50,000 cases and deaths reported per Disease", x = 'Disease' , y = 'Numbers') + # Title of the plot
+  theme(text = element_text(size = 9),element_line(size =1),legend.position = c(-0.4, 0.0),axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+
+
+```{r}
+State_death_count <- filter (Tycho, event == "DEATHS") # filtering only deaths using state column (2)number from Tycho
+State_death_count <- State_death_count %>%  group_by(state, disease) %>% summarise(number = sum(number))
+```
+
+```{r}
+State_cases_count <- filter (Tycho, event == "CASES") # filtering only deaths using state column (2)number from Tycho
+State_cases_count <- State_cases_count %>%  group_by(state, disease) %>% summarise(number = sum(number))
+
+```
+
+```{r}
+State_death_count$groups <- cut(State_death_count$number, breaks = c(0,10,100,1000,10000,100000,500000)) # Creating Group of number of death for heat_map to create scale  
+```
+
+
+## Heat Maps 
+
+```{r fig.align='center'}
+# Heat_map for deaths on the basis of ranges(0-10,10-100,100-1000...) which shows the concentration of the deaths per state.
+ggplot(State_death_count, aes(state,disease)) +
+  geom_tile(aes(fill= groups)) + # Border color
+  scale_fill_manual(breaks = levels(State_death_count$groups), values = c("cornsilk","gold","orange","darkorange2","red2","darkred")) + # Box color low to high
+  theme_tufte() + # plot theme
+  theme(text = element_text(size = 9),axis.text.x = element_text(angle = 90, hjust = 1)) + # text size arrangement of scales
+ theme(legend.key.width = unit(0.3, "cm"), legend.key.height = unit(0.2, "cm"),legend.direction = 'horizontal', legend.position = c(0.65, 1.05)) +
+  ggtitle("Heatmap of Deaths in State" )
+```
+```{r}
+State_cases_count$groups <- cut(State_cases_count$number, breaks = c(0,100,1000,10000,100000,1000000,5000000)) # Creating Group of number of cases for heat_map to create scale
+```
+
+```{r fig.align='center'}
+# Heat_map for cases on the basis of ranges(0-100,100-1000,1000-10000...) which shows the concentration of the cases per state.
+ggplot(State_cases_count, aes(state, disease )) +
+  geom_tile(aes(fill= groups ) ) +
+  scale_fill_manual(breaks = levels(State_cases_count$groups),  values = c("khaki","yellow3","olivedrab3","turquoise3","deepskyblue4","darkblue","mediumseagreen2")) +
+  theme_tufte() + # plot theme
+  theme(text = element_text(size = 7),axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(legend.key.width = unit(0.9, "cm"), legend.key.height = unit(0.1, "cm"),legend.direction = 'horizontal', legend.position = c(0.7, 1.05)) +
+  ggtitle("Heatmap of Cases of Disease in State" ) # plot title
+  
+# White space shows there are no cases for particular disease for related states
+```
+The heat map shows how three diseases—tuberculosis, influenza, and pneumonia—had a significant influence on almost all states. Additionally, it was discovered that yellow fever, dengue, cholera, varioloid, and typhus fever had the least influence.
+
+The intensity of the number of cases for all diseases in the states of the United States is shown in the heat map below. The heat map shows that Anthrax, Babesiosis, Leprosy, Dengue, Coccidioidomycosis, Ehrlichiosis/Anaplasmosis, and Yellow Fever are the diseases that are least affected throughout all states. Measles, influenza, hepatitis B, hepatitis A, gonorrhea, whooping cough, chlamydia, and chicken pox are the illnesses that have the most impact..
+
+In this heat map, it can also be see that five states—American Samoa (AS), Guam (GU), MP, PT, and Virgin Islands—had less impact on the number of cases than the other states (VI).
+
+```{r}
+year_state_Case$Create <- cut(year_state_Case$number,  breaks = c(0,100,1000,10000,100000,1000000,5000000))
+```
+
+```{r fig.align='center'}
+ggplot(year_state_Case, aes(x=year, y = state , fill= number))+ 
+      geom_tile(aes(fill= Create)) +
+      labs(title ='Heatmap of Cases on states per year', y = 'States') +
+      scale_fill_manual(name = "Numbers", values = c("#FF9966","#FF3333","#CC0000","#990000","#660000", "#330000"), 
+                        labels = c("^100", "^1000", "^10,000","^1,00,000","^10,00,000") ) +
+      theme(text = element_text(size = 8))
+```
+
+
+
+```{r}
+Both_Event <- Events %>% 
+          select(year, state, disease, event, number)  %>% 
+          pivot_wider(names_from = event, values_from = number , values_fn = {sum}) %>% 
+          group_by(CASES, DEATHS) %>% 
+          filter(CASES  > 0 & DEATHS > 0 ) %>%  
+          pivot_longer( cols = DEATHS : CASES, names_to = "event", values_to = "number")
+```
+
+
+## Animated Box Plot
+
+The bellowed box plot shows comparison between cases and deaths for 14 disease. To compare Fatal disease we compare cases with dates using box plot. With box Plot it can be Identified that CHICKENPOX [VARICELLA] and BRUCELLOSIS [UNDULANT FEVER] recorded very High cases as compare to deaths so this disease aren’t deadly But the PNEUMONIA and TUBERCULOSIS [PHTHISIS PULMONALIS] have more death cases recorded as compare to cases which can be seen from quartile values of the box.
+
+```{r fig.align='center'}
+Box <- ggplot(Both_Event, aes(x = disease, y = number, fill = event)) +
+  geom_boxplot( width = 0.6) + scale_y_log10(breaks = c(100,200,400,800,1600,3200)) +
+  labs(x = "Disease", y = "Number") + scale_fill_manual(values= c("#666600", "#660000")) +
+  ggtitle("Comparison of Deaths and Cases by Disease") +  
+  theme(text = element_text(size = 8),axis.text.x = element_text(angle = 10, hjust = 1),legend.position = c(0.95, 0.9)) 
+  
+Box.animation = Box +
+   transition_states(disease, wrap = FALSE) + shadow_mark(alpha = 0.5) +
+   shadow_mark(alpha = 0.5) + enter_grow() + exit_fade() + ease_aes('back-out')
+   
+Box.animation
+```
+
+
+```{r}
+# Here filtering the Measles according each decade,to combine it at the end.
+Y1915 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1905-01-01")  & from_date < as.Date("1915-01-01"))  %>%  select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1905") 
+
+Y1925 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1915-01-01")  & from_date < as.Date("1925-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1915")
+
+Y1935 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1925-01-01")  & from_date < as.Date("1935-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1925")
+
+Y1945 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1935-01-01")  & from_date < as.Date("1945-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1935")
+
+Y1955 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1945-01-01")  & from_date < as.Date("1955-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1945")
+
+Y1965 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1955-01-01")  & from_date < as.Date("1965-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1955")
+
+Y1975 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1965-01-01")  & from_date < as.Date("1975-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1965")
+
+Y1985 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1975-01-01")  & from_date < as.Date("1985-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1975")
+
+Y1995 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1985-01-01")  & from_date < as.Date("1995-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1985")
+
+Y2005 <- Tycho %>% filter(disease == "MEASLES") %>% group_by(state,number) %>% filter(from_date >= as.Date("1995-01-01")  & from_date < as.Date("2005-01-01")) %>% select(state, number) %>% ungroup(state,number) %>% group_by(state) %>% count(state, wt = number) %>% add_column(year = "1995")
+```
+
+```{r}
+# Combining the decade from 1915-2005 for measles disease
+Measles_decade <- rbind(Y1915,Y1925,Y1935,Y1945,Y1955,Y1965,Y1975,Y1985,Y1995,Y2005) # Combining all decades to new data frame
+Measles_decade$year <- as.integer(Measles_decade$year)
+```
+
+## Animated Scatter plot
+
+```{r fig.align='center'}
+# Animation plot to catch the trend of disease per each state
+ggplot(Measles_decade, aes( x = state, y = n, size = n, color = state)) +
+  geom_point(alpha = 1.0, show.legend = FALSE  ) +
+  scale_color_viridis_d() +
+  theme(plot.title = element_text(hjust = 0.5)) + 
+  theme(text = element_text(size = 9),axis.text.x = element_text(angle = 90, hjust = 1)) +
+  theme(legend.position = "none") + scale_size(range = c(2, 12)) +
+  labs(title = 'Year: {frame_time}', x = 'State', y = 'Number of cases') + transition_time(year) 
+```
+According to the scatter animation plot shown above, measles cases increased exponentially from a low level in 1905 to a peak around 1936. Thereafter, cases gradually declined until the measles vaccine was released in the US in 1962, at which point they abruptly began to decline.
+
+
+# 5 Results
+
+After this nominal analysis we found that there are several points to consider as a result. First fall data aren’t accurate or reliable for guarantied analysis because there are more than 50 states plus some disease have given only number of cases and some have have only deaths which is surly questionable that how figures of deaths noticed without figures of cases.
+
+New York and Texas are highly affected states by cases as compare to other states. But in terms of mortality there are less impact on Texas compare to mortality rate in New York.
+
+In terms of disease Measles have the highest cases approx 25309922, Also there isn’t any deaths recorded for Measles so we can’t create our hypothesis on the mortality impacts by Measles.
+
+Measles was discovered to have a much greater impact than other illnesses (from tree map). And the data demonstrates that New York had the greatest impact in terms of incidents and fatalities. Measles, influenza, scarlet fever, chlamydia, and gonorrhea are shown to be the top five dangerous diseases when just cases are taken into account.
+
+However, the survival rates of people with tuberculosis, pneumonia, pellagra, and meningitis are incredibly low, making them the most deadly illnesses.
+
+In addition there are several years haven’t recorded in Tycho project which is also a big factor to inhibits further analysis.
+
+
+# 6 Discussion
+
+The information provided by the US health department was practically defective and comprised state names, dates, and hours. In order to extract useful insights from the data, the numbers were further separated into events that discriminated between cases and fatalities as well as contained city and state names. The exact weekly time spans of the data allowed for analysis based on a series of occurrences.
+
+The actual data shows no missing numbers, however a closer look reveals that the data lacks information on the death rates associated with a number of illnesses. just mention a few, there are chlamydia, gonorrhea, measles, mumps, and rubella. However, data on some illnesses only include fatalities. Consider the diseases varioloid, cholera, influenza and pneumonia.
+
+When just cases were included, the research results showed that measles was the most common illness; however, if data on fatalities had been added, the technique may have yielded more accurate forecasts of mortality owing to measles.
+
+
+# 7 Conclusion
+
+This graphical study has shown that numerous illnesses, including meningitis, tuberculosis, pneumonia, and pellagra, have a high mortality rate in the United States, but the data shows that measles is the most prevalent disease among the 50.
+
+
+# 8. Refrences
+
+(https://www.youtube.com/watch?v=RrtqBYLf404)
+
+(https://ggplot2.tidyverse.org/)
+
+(https://derekogle.com/NCGraphing/img/colorbyhex.png)
+
+(https://dplyr.tidyverse.org/)
+

@@ -30,6 +30,12 @@ R provides quick and simple tools that make it easier to transform data into vis
 
   ![Scatter2](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/6db5922c-b954-4797-bce5-d8830c9d1745)
 
+- Choropleth Map1
+
+- 
+
+- Choropleth Map2
+
   
 - Bar Plot1
 

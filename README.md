@@ -32,11 +32,11 @@ R provides quick and simple tools that make it easier to transform data into vis
 
 - Choropleth Map1
 
-  ![newplot(1)](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/blob/f596bbfc7ebf9f2026f4f45dca483d3b8e852461/Graphs/newplot%20(1).png)
+  ![newplot (1)](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/05b67ca3-167c-4956-ab4a-b7b291b65a0a)
 
 - Choropleth Map2
 
-  ![newplot](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/blob/f596bbfc7ebf9f2026f4f45dca483d3b8e852461/Graphs/newplot%20(1).png)
+ ![newplot (1)](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/05b67ca3-167c-4956-ab4a-b7b291b65a0a)
   
 - Bar Plot1
 

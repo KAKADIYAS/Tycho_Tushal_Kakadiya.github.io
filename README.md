@@ -15,6 +15,8 @@ This project is aiming to analyse massive data that contains the details of 50 d
 
 R provides quick and simple tools that make it easier to transform data into visually insightful pieces like graphs. The data gets easier to read and comprehend from the graphs. The following is a list of the various types of graphs are plotted here using Descriptive statistics and ggplot2.
 
+### Note:- 
+The generated graphs and plots provided here offer an overview of the data analysis. For more detailed insights and access to the complete analytical file, please navigate to the GitHub page by clicking on the blue button located at the top of this page. There, you'll find the comprehensive analysis, including additional visualizations, code, and explanations.
 
 ## following few graphs are the representation of visualisation used in this Analysis.
 

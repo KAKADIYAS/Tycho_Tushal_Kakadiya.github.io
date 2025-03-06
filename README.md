@@ -29,37 +29,32 @@ The generated graphs and plots provided here are offers an overview of the Overa
   
   
 - Scatter Plot1
-- Over the duration of the observation period, the scatter plot compares the cases. This graph generated using log10 scale to compare all Dieses cases across all 50 states in U.S. 
-![image](https://github.com/user-attachments/assets/47a662dc-f704-413d-87b8-e3257a1f29d9)
+- Over the duration of the observation period, the scatter plot compares the cases. This graph generated using log10 scale to compare all Dieses cases across all 50 states in U.S.![image](https://github.com/user-attachments/assets/47a662dc-f704-413d-87b8-e3257a1f29d9)
 
 
   ![Scatter1](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/ee3cb774-d02f-4d8b-a3a3-6d6ede736ed8)
 
 - Scatter Plot2
-- This graph compares the Deaths throughout the course of the observation period using a scatter plot. This graph compares all deaths events among all 50 states using a log10 scale.
-![image](https://github.com/user-attachments/assets/def12f08-83d0-49b9-8a88-0f675bcbba3e)
+- This graph compares the Deaths throughout the course of the observation period using a scatter plot. This graph compares all deaths events among all 50 states using a log10 scale. ![image](https://github.com/user-attachments/assets/def12f08-83d0-49b9-8a88-0f675bcbba3e)
 
 
   ![Scatter2](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/6db5922c-b954-4797-bce5-d8830c9d1745)
 
 - Choropleth Map1
-- This graphical plot, is an interactive choropleth map, displays all deaths for all 50 States in the United States from 1888 to 2014 in sequance of years. It explains why particular states, like New York, have lighter hues more frequently in the US's northwest side, which particularly follows the high number of cases.
-![image](https://github.com/user-attachments/assets/ec6be4e9-a1b2-49b3-92de-668619287f26)
+- This graphical plot, is an interactive choropleth map, displays all deaths for all 50 States in the United States from 1888 to 2014 in sequance of years. It explains why particular states, like New York, have lighter hues more frequently in the US's northwest side, which particularly follows the high number of cases.![image](https://github.com/user-attachments/assets/ec6be4e9-a1b2-49b3-92de-668619287f26)
 
 
   ![newplot (1)](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/f2022069-f3d7-4982-95f4-7abd0248e77a)
 
 - Choropleth Map2
-- This graphical plot, is also an interactive choropleth map, displays all cases for all 50 States in the United States from 1888 to 2014 year wise. It explains why particular states, like New York, have lighter hues more frequently in the US's northwest.
-![image](https://github.com/user-attachments/assets/b79e31f1-2a25-462f-b60d-9fac36337a28)
+- This graphical plot, is also an interactive choropleth map, displays all cases for all 50 States in the United States from 1888 to 2014 year wise. It explains why particular states, like New York, have lighter hues more frequently in the US's northwest.![image](https://github.com/user-attachments/assets/b79e31f1-2a25-462f-b60d-9fac36337a28)
 
 
  ![newplot](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/5e05847b-0856-4702-bf4a-403a20cb4cad)
 
   
 - Bar Plot1
-- The graph, compares the number of cases and fatalities for each disease in the United States for the relevant time frames. There are exactly half (25) of the diseases that fall within the group of diseases with more than 55000 cases.
-![image](https://github.com/user-attachments/assets/2173592d-55ed-4e0a-b878-01ff87281170)
+- The graph, compares the number of cases and fatalities for each disease in the United States for the relevant time frames. There are exactly half (25) of the diseases that fall within the group of diseases with more than 55000 cases.![image](https://github.com/user-attachments/assets/2173592d-55ed-4e0a-b878-01ff87281170)
 
 
   ![Barplot_1](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/9908a2e5-e50d-4871-9607-b29ddebe943d)
@@ -88,16 +83,14 @@ In this heat map, it can also be see that five states—American Samoa (AS), Gua
   ![Heatmap_2](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/25497daf-284d-432d-adc0-d30a06dbbb83)
   
 - Heat map3
-- The heat map shows how almost all states were greatly influenced by all illnesses. Almost all states were affected, where if we compare with scatterplot 1 this plot gives more detailed view for affection over state on particulate year. The darker hue in the outcome indicates greater influence. 
-![image](https://github.com/user-attachments/assets/1fbaeacc-630c-495f-8531-20c5660012e6)
+- The heat map shows how almost all states were greatly influenced by all illnesses. Almost all states were affected, where if we compare with scatterplot 1 this plot gives more detailed view for affection over state on particulate year. The darker hue in the outcome indicates greater influence.![image](https://github.com/user-attachments/assets/1fbaeacc-630c-495f-8531-20c5660012e6)
 
 
   ![Heatmap_3](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/26d3a7be-8985-4525-861e-788a39b3b9da)
     
 
 - Box Plot
-- This box plot shows comparison between cases and deaths for 14 disease. To compare Fatal disease, we compare cases with dates using box plot. 
-![image](https://github.com/user-attachments/assets/8f1d32b8-e83c-4b3b-af90-8f5da526c820)
+- This box plot shows comparison between cases and deaths for 14 disease. To compare Fatal disease, we compare cases with dates using box plot.![image](https://github.com/user-attachments/assets/8f1d32b8-e83c-4b3b-af90-8f5da526c820)
 
 
   ![Boxplot](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/41bc023e-89f1-4f20-b495-feaa0ddf4d0c)

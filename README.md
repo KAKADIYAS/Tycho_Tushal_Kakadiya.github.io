@@ -16,13 +16,17 @@ This project is aiming to analyse massive data that contains the details of 50 d
 R provides quick and simple tools that make it easier to transform data into visually insightful pieces like graphs. The data gets easier to read and comprehend from the graphs. The following is a list of the various types of graphs are plotted here using Descriptive statistics and ggplot2.
 
 ### Note:- 
-The generated graphs and plots provided here offer an overview of the data analysis. For more detailed insights and access to the complete analytical file, please navigate to the GitHub page by clicking on the blue button located at the top of this page. There, you'll find the comprehensive analysis, including additional visualizations, code, and explanations.
+The generated graphs and plots provided here are offers an overview of the Overall Analysis. For more detailed insights and access to the complete analytical file, please navigate to the GitHub page by clicking on the blue button located at the top of this page. There, you'll find the comprehensive analysis, including additional visualizations, code, and explanations.
 
 ## following few graphs are the representation of visualisation used in this Analysis.
 
 - Tree map
+- Here, the Tree map shows how the spread of disease varies in terms of magnitude in relation to one another. The most prevalent diseases are shown in the largest quadrilateral region, whilst the least prevalent diseases are shown in the smallest quadrilateral. Additionally, it provides an explanation for two events cases and deaths in terms of the occurrence ratio.
+![image](https://github.com/user-attachments/assets/fc32abc0-ea13-411c-a816-673ab2937054)
+
 
   ![Tree map](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/2356f7d6-33ac-4570-b05f-9649446aad18)
+  
   
 - Scatter Plot1
 

@@ -21,7 +21,7 @@ The generated graphs and plots provided here are offers an overview of the Overa
 ## following few graphs are the representation of visualisation used in this Analysis.
 
 - Tree map
-- Here, the Tree map shows how the spread of disease varies in terms of magnitude in relation to one another. The most prevalent diseases are shown in the largest quadrilateral region, whilst the least prevalent diseases are shown in the smallest quadrilateral. Additionally, it provides an explanation for two events cases and deaths in terms of the occurrence ratio.
+- Tree map shows how the spread of disease varies in terms of magnitude in relation to one another. The most prevalent diseases are shown in the largest quadrilateral region, while the least prevalent diseases are shown in the smallest quadrilateral. Additionally, it provides data insights for two events, cases and deaths in terms of the occurrence ratio.
 ![image](https://github.com/user-attachments/assets/fc32abc0-ea13-411c-a816-673ab2937054)
 
 
@@ -29,7 +29,7 @@ The generated graphs and plots provided here are offers an overview of the Overa
   
   
 - Scatter Plot1
-- Over the duration of the observation period, the scatter plot compares the cases. This graph uses a log10 scale to compare all Dieses cases across all 50 states in U.S. 
+- Over the duration of the observation period, the scatter plot compares the cases. This graph generated using log10 scale to compare all Dieses cases across all 50 states in U.S. 
 ![image](https://github.com/user-attachments/assets/47a662dc-f704-413d-87b8-e3257a1f29d9)
 
 
@@ -43,14 +43,14 @@ The generated graphs and plots provided here are offers an overview of the Overa
   ![Scatter2](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/6db5922c-b954-4797-bce5-d8830c9d1745)
 
 - Choropleth Map1
-- This graphical plot, an interactive choropleth map, displays all deaths for all 50 States in the United States from 1888 to 2014 year wise. It explains why particular locations or sets of states, like New York, have lighter hues more frequently in the US's northwest.
+- This graphical plot, is an interactive choropleth map, displays all deaths for all 50 States in the United States from 1888 to 2014 in sequance of years. It explains why particular states, like New York, have lighter hues more frequently in the US's northwest side, which particularly follows the high number of cases.
 ![image](https://github.com/user-attachments/assets/ec6be4e9-a1b2-49b3-92de-668619287f26)
 
 
   ![newplot (1)](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/f2022069-f3d7-4982-95f4-7abd0248e77a)
 
 - Choropleth Map2
-- This graphical plot, an interactive choropleth map, displays all cases for all 50 States in the United States from 1888 to 2014 year wise. It explains why particular locations or sets of states, like New York, have lighter hues more frequently in the US's northwest.
+- This graphical plot, is also an interactive choropleth map, displays all cases for all 50 States in the United States from 1888 to 2014 year wise. It explains why particular states, like New York, have lighter hues more frequently in the US's northwest.
 ![image](https://github.com/user-attachments/assets/b79e31f1-2a25-462f-b60d-9fac36337a28)
 
 
@@ -58,7 +58,7 @@ The generated graphs and plots provided here are offers an overview of the Overa
 
   
 - Bar Plot1
-- The graphic shown here compares the number of cases and fatalities for each disease in the United States for the relevant time frames. There are exactly half (25) of the diseases that fall within the group of diseases with more than 55000 cases.
+- The graph, compares the number of cases and fatalities for each disease in the United States for the relevant time frames. There are exactly half (25) of the diseases that fall within the group of diseases with more than 55000 cases.
 ![image](https://github.com/user-attachments/assets/2173592d-55ed-4e0a-b878-01ff87281170)
 
 
@@ -72,8 +72,7 @@ The generated graphs and plots provided here are offers an overview of the Overa
   ![Barplot_2](https://github.com/KAKADIYAS/Kakadiya_Tycho.github.io/assets/97363259/b580c24f-770e-451d-834f-757d864cd962)
   
 - Heat map1
-- The heat map shows how three diseases—tuberculosis, influenza, and pneumonia—had a significant influence on almost all states. Additionally, it was discovered that yellow fever, dengue, cholera, varioloid, and typhus fever had the least influence.
-It also shows the New York state had vital impact of three disease.
+- The heat map shows how three diseases—tuberculosis, influenza, and pneumonia—had a significant influence on almost all states. Additionally, it was discovered that yellow fever, dengue, cholera, varioloid, and typhus fever had the least influence. It also shows the New York state had vital impact of three disease.
 ![image](https://github.com/user-attachments/assets/ac0e6a19-dfba-421d-a35a-f040f726a8ee)
 
 
